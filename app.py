@@ -37,100 +37,6 @@ st.set_page_config(
     layout="wide",
 )
 
-crosshair_html = """
-<style>
-        .crosshair-vertical, .crosshair-horizontal {
-            position: absolute;
-            background-color: red;
-            opacity: 0.7;
-            z-index: 9999;
-        }
-        .crosshair-vertical {
-            top: 0;
-            left: 50%;
-            width: 2px;
-            height: 100%;
-            transform: translateX(-50%);
-        }
-        .crosshair-horizontal {
-            left: 0;
-            top: 50%;
-            height: 2px;
-            width: 100%;
-            transform: translateY(-50%);
-        }
-    </style>
-    <div class="crosshair-vertical"></div>
-    <div class="crosshair-horizontal"></div>
-
-    <script>
-        // Keeps the crosshair in the center of the map container
-        document.querySelector('.crosshair-vertical').style.left = '50%';
-        document.querySelector('.crosshair-horizontal').style.top = '50%';
-    </script>
-"""
-
-# st.markdown(
-#     """
-# <style>
-
-# #root > div:nth-child(1) > div.withScreencast > div > div > div > section:nth-child(1) > div:nth-child(1)
-#     > div:nth-child(2) > div > div:nth-child(1) > div > div:nth-child(2) > div:nth-child(1) > div > div:nth-child(3)
-#     > div > div:nth-child(2) {
-#         position: absolute;
-#         margin: 0;
-#         padding: 0;
-#         display: flex;
-#         text-align: center;
-#         align-content: center;
-#         justify-content: center;
-#         align-items: center;
-#         top: calc(50% - 48px);
-#         pointer-events: none;
-# }
-
-# #root > div:nth-child(1) > div.withScreencast > div > div > div > section:nth-child(1) > div:nth-child(1)
-#     > div:nth-child(2) > div > div:nth-child(1) > div > div:nth-child(2) > div:nth-child(1) > div > div:nth-child(3)
-#     > div > div:nth-child(2) > div {
-#         display: flex;
-#         align-content: center;
-#         justify-content: center;
-#         align-items: center;
-# }
-
-# #root > div:nth-child(1) > div.withScreencast > div > div > div > section:nth-child(1) > div:nth-child(1)
-#     > div:nth-child(2) > div > div:nth-child(1) > div > div:nth-child(2) > div:nth-child(1) > div > div:nth-child(3)
-#     > div > div:nth-child(2) > div > div.st-emotion-cache-nok2kl.e1nzilvr5 > p {
-#         display: flex;
-#         text-align: center;
-#         color: rgb(255, 75, 75);
-#         font-weight: bold;
-#         margin: 0;
-#         font-size: 50px;
-#         align-content: center;
-#         justify-content: center;
-#         align-items: center;
-#         text-shadow: 5px 5px 5px grey;
-# }
-
-# #root > div:nth-child(1) > div.withScreencast > div.stApp.stAppEmbeddingId-sm7ewcehhe2f.streamlit-wide.st-emotion-cache-13k62yr.erw9t6i0 > div.stAppViewContainer.appview-container.st-emotion-cache-1yiq2ps.ea3mdgi9 > section.stSidebar.st-emotion-cache-1c4qvk6.eczjsme18 > div.st-emotion-cache-6qob1r.eczjsme11:nth-child(1) > div.st-emotion-cache-1gwvy71.eczjsme12 > div.st-emotion-cache-8atqhb.ea3mdgi4 > div.st-emotion-cache-0.e1f1d6gn0 > div.st-emotion-cache-1wmy9hl.e1f1d6gn1 > div.stVerticalBlock.st-emotion-cache-1m0plnz.e1f1d6gn2 > div.stForm.st-emotion-cache-qcpnpn.e10yg2by1 > div.st-emotion-cache-0.e1f1d6gn0 > div.st-emotion-cache-1wmy9hl.e1f1d6gn1 > div.stVerticalBlock.st-emotion-cache-oogbsr.e1f1d6gn2 > div.st-emotion-cache-0.e1f1d6gn0:nth-child(3) > div.st-emotion-cache-1wmy9hl.e1f1d6gn1 > div.stVerticalBlock.st-key-start_location_map_container.st-emotion-cache-oogbsr.e1f1d6gn2 > div.stElementContainer.element-container.st-emotion-cache-h8arzt.e1f1d6gn4:nth-child(2) > div.stMarkdown > div.st-emotion-cache-nok2kl.e1nzilvr5 > p:nth-child(1){
-#         display: flex;
-#         text-align: center;
-#         color: rgb(255, 75, 75);
-#         font-weight: bold;
-#         margin: 0;
-#         font-size: 50px;
-#         align-content: center;
-#         justify-content: center;
-#         align-items: center;
-#         text-shadow: 5px 5px 5px grey;
-# }
-# </style>
-# """,
-#     unsafe_allow_html=True,
-# )
-
-
 # * Starting variables
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -291,40 +197,6 @@ with st.spinner("Loading data..."):
 st.success(f"Completely load data of {len(nodes)} nodes and {len(edges)} edges~~")
 
 
-# def display_path(map, algorithm_name, points):
-#     start, end = points[0], points[1]
-
-#     nearest_start = getKNN(start, node_dict, nodes)
-#     nearest_end = getKNN(end, node_dict, nodes)
-
-#     # Call selected path-finding algorithm
-#     if algorithm_name == "Dijkstra":
-#         path_length, path_coords = dijkstra(dir_graph, nearest_start, nearest_end)
-#     elif algorithm_name == "Bellman-Ford":
-#         path_length, path_coords = bellman_ford(dir_graph, nearest_start, nearest_end)
-#     elif algorithm_name == "Floyd-Warshall":
-#         path_length, path_coords = floyd_warshall(dir_graph, nearest_start, nearest_end)
-
-#     vertices = (
-#         [start]
-#         + [
-#             (float(node_dict[int(node)]["y"]), float(node_dict[(int(node))]["x"]))
-#             for node in path_coords
-#         ]
-#         + [end]
-#     )
-
-#     # Add path as polyline on the map
-#     # path_layer = folium.FeatureGroup(name="Shortest Path")
-#     folium.PolyLine(
-#         vertices,
-#         color="blue",
-#         weight=5,
-#         tooltip=f"Path Length: {path_length:.2f} meters",
-#     ).add_to(map)
-#     # return path_layer
-
-
 def run_algorithm(algorithm_name, points):
     start, end = points[0], points[1]
 
@@ -362,22 +234,6 @@ st.write("Target:", st.session_state["target"])
 st.write("Algorithm:", st.session_state["algorithm"])
 
 with st.spinner("Building map..."):
-    # solution_map = create_map()
-    # add_marker(solution_map, st.session_state["source"], popup_text="Start Position")
-    # add_marker(solution_map, st.session_state["target"], popup_text="End Position")
-    # display_path(
-    #     solution_map,
-    #     st.session_state["algorithm"],
-    #     [st.session_state["source"], st.session_state["target"]],
-    # )
-    # # solution_map.add_child(solution_fg)
-    # solution_map.save("solution.html")
-
-    # with open("solution.html", "r", encoding="utf-8") as map_file:
-    #     map_html = map_file.read()
-
-    # st.html(map_html)
-
     try:
         distance, coordinates = run_algorithm(
             st.session_state["algorithm"],
