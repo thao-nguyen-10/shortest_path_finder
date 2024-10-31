@@ -90,7 +90,7 @@ with st.sidebar:
 
         # Choose start location
         st.subheader("Choose a starting location")
-        st.caption("These settings must be filled to calculate the shortest path")
+        st.caption(":blue[The chosen point will be the center of the map.]")
 
         # Create the map to select starting location
         with st.container(key="start_location_map_container"):
@@ -124,7 +124,7 @@ with st.sidebar:
 
         # Choose end location
         st.subheader("Choose an ending location")
-        st.caption("These settings must be filled to calculate the shortest path")
+        st.caption(":blue[The chosen point will be the center of the map.]")
 
         # Create the map to select ending location
         with st.container(key="end_location_map_container"):
@@ -158,7 +158,7 @@ with st.sidebar:
 
         # Choose algorithm
         st.subheader("Choose an algorithm")
-        st.caption("The selection of algorithm for shortest path calculation")
+        st.caption(":blue[Selection of algorithm for shortest path calculation]")
 
         # Create the box to select the algorithm
         with st.container(key="algo_selection_container"):
