@@ -6,3 +6,4 @@ numpy
 networkx
 pyyaml
 haversine
+scikit-learn
