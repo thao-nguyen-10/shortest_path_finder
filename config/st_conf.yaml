@@ -1,0 +1,4 @@
+app_settings:
+  map:
+    width: 700
+    height: 700

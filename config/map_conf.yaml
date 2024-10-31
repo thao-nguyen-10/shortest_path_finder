@@ -1,0 +1,7 @@
+map_settings:
+  initial_coordinates: [10.765337, 106.681365] # The center of the map
+  initial_zoom: 15
+  marker_color: "blue"
+  initial_algorithm: "Dijkstra"
+  start_coordinates: [10.772264705307123, 106.65794471235215] # HCMUT
+  end_coordinates: [10.775677961787341, 106.70377060864459] # Sheraton Hotel
