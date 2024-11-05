@@ -1,6 +1,7 @@
-import folium
 import yaml
 import os
+import streamlit as st
+from streamlit_leaflet import st_leaflet, Marker
 
 # Constraints
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -9,7 +10,6 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 map_conf_path = os.path.join(SCRIPT_DIR, "../config/map_conf.yaml")
 with open(map_conf_path) as conf_file:
     map_conf = yaml.safe_load(conf_file)
-
 
 # Extract map settings
 INITIAL_COORDINATES = map_conf["map_settings"]["initial_coordinates"]
@@ -21,22 +21,11 @@ END_COORDINATES = map_conf["map_settings"]["end_coordinates"]
 
 
 def create_map():
-    folium_map = folium.Map(location=INITIAL_COORDINATES, zoom_start=INITIAL_ZOOM)
-    return folium_map
+    # Create the initial Leaflet map centered at INITIAL_COORDINATES with the initial zoom level
+    return st_leaflet(center=INITIAL_COORDINATES, zoom=INITIAL_ZOOM, height=500, width="100%")
 
 
-def add_marker(
-    folium_map, location, popup_text="Marker", icon=folium.Icon(color=MARKER_COLOR)
-):
-    folium.Marker(location, popup=popup_text, icon=icon).add_to(folium_map)
-    return folium_map
-
-# Function to add a marker on the map
-# def add_marker(map_obj, location):
-#    folium.Marker(location).add_to(map_obj)
-
-# Create initial map for start and end points
-def create_map_with_marker(initial_coords):
-    m = folium.Map(location=initial_coords, zoom_start=12)
-    add_marker(m, initial_coords)
-    return m
+def add_marker(map_obj, location, popup_text="Marker"):
+    # Add a marker to the map at the specified location
+    Marker(location=location, popup=popup_text).add_to(map_obj)
+    return map_obj
