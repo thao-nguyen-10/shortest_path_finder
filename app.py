@@ -49,20 +49,14 @@ MAP_HEIGHT = app_conf["app_settings"]["map"]["height"]
 MAP_WIDTH = app_conf["app_settings"]["map"]["width"]
 
 # * State variables
-if "start_center" not in st.session_state:
-    st.session_state["start_center"] = INITIAL_COORDINATES
-
-if "start_zoom" not in st.session_state:
-    st.session_state["start_zoom"] = INITIAL_ZOOM
+if "start_last_clicked" not in st.session_state:
+    st.session_state["start_last_clicked"] = INITIAL_COORDINATES
 
 if "source" not in st.session_state:
     st.session_state["source"] = START_COORDINATES
 
-if "end_center" not in st.session_state:
-    st.session_state["end_center"] = INITIAL_COORDINATES
-
-if "end_zoom" not in st.session_state:
-    st.session_state["end_zoom"] = INITIAL_ZOOM
+if "end_last_clicked" not in st.session_state:
+    st.session_state["end_last_clicked"] = INITIAL_COORDINATES
 
 if "target" not in st.session_state:
     st.session_state["target"] = END_COORDINATES
@@ -116,6 +110,11 @@ with st.sidebar:
                               width=310, 
                               height=290, 
                               returned_objects=["last_clicked"])
+                    
+                    st.session_state["start_last_clicked"] = [
+                    start_map_state_change["last_clicked"]["lat"],
+                    start_map_state_change["last_clicked"]["lng"],
+                    ]
 
                     #st.write(f"Coordinates: Latitude: {start_last_clicked['lat']}, Longitude: {start_last_clicked['lng']}")
                 
@@ -157,6 +156,11 @@ with st.sidebar:
                               width=310, 
                               height=290, 
                               returned_objects=["last_clicked"])
+                    
+                    st.session_state["end_last_clicked"] = [
+                    end_map_state_change["last_clicked"]["lat"],
+                    end_map_state_change["last_clicked"]["lng"],
+                    ]
 
                     #st.write(f"Coordinates: Latitude: {end_last_clicked['lat']}, Longitude: {end_last_clicked['lng']}")
                 
