@@ -1,19 +1,80 @@
-import folium
+import os
+import yaml
+import warnings
+
 import streamlit as st
-from streamlit_folium import st_folium
+import pandas as pd
+import folium
 
-# Function to add a marker on the map
-def add_marker(map_obj, location):
-    folium.Marker(location).add_to(map_obj)
+from streamlit_folium import st_folium, folium_static
+from haversine import haversine, Unit
 
-# Create initial map for start and end points
-def create_map_with_marker(initial_coords):
-    m = folium.Map(location=initial_coords, zoom_start=12)
-    add_marker(m, initial_coords)
-    return m
+from networkx import NetworkXNoPath
 
-# Layout for Streamlit App
-st.title("Find the shortest path with algorithms")
+from src import (
+    build_graph,
+    add_marker,
+    create_map_with_marker,
+    create_map,
+    INITIAL_COORDINATES,
+    INITIAL_ZOOM,
+    INITIAL_ALGORITHM,
+    START_COORDINATES,
+    END_COORDINATES,
+    dijkstra,
+    bellman_ford,
+    floyd_warshall,
+)
+from src.utils import getKNN
+
+warnings.filterwarnings("ignore", category=DeprecationWarning)
+
+# * Page config
+st.set_page_config(
+    page_title="Group 1: Interactive Shortest Path Finder",
+    page_icon=":world_map:",
+    layout="wide",
+)
+
+# * Starting variables
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# Load configs
+app_conf_path = os.path.join(SCRIPT_DIR, "./config/st_conf.yaml")
+with open(app_conf_path) as conf_file:
+    app_conf = yaml.safe_load(conf_file)
+    
+# Extract app settings
+MAP_HEIGHT = app_conf["app_settings"]["map"]["height"]
+MAP_WIDTH = app_conf["app_settings"]["map"]["width"]
+
+# * State variables
+if "start_center" not in st.session_state:
+    st.session_state["start_center"] = INITIAL_COORDINATES
+
+if "start_zoom" not in st.session_state:
+    st.session_state["start_zoom"] = INITIAL_ZOOM
+
+if "source" not in st.session_state:
+    st.session_state["source"] = START_COORDINATES
+
+if "end_center" not in st.session_state:
+    st.session_state["end_center"] = INITIAL_COORDINATES
+
+if "end_zoom" not in st.session_state:
+    st.session_state["end_zoom"] = INITIAL_ZOOM
+
+if "target" not in st.session_state:
+    st.session_state["target"] = END_COORDINATES
+
+if "algorithm" not in st.session_state:
+    st.session_state["algorithm"] = INITIAL_ALGORITHM
+
+# * Helper functions
+
+# * Layout
+st.title("Welcome to the Shortest Path Finder app!")
+st.image(os.path.join(SCRIPT_DIR, "./img/map.jpg"))
 
 # Sidebar controls
 with st.sidebar:
