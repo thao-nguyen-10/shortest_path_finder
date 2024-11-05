@@ -84,7 +84,7 @@ with st.sidebar:
         with st.container(key="start_location_map_container"):
             
             # Capture user clicks to set the start point
-            start_map_state_change = st_leaflet.st_leaflet_map(
+            start_map_state_change = st_leaflet.st_map(
                 lat=st.session_state["start_center"][0],
                 lon=st.session_state["start_center"][1],
                 zoom=st.session_state["start_zoom"],
@@ -105,7 +105,7 @@ with st.sidebar:
                 ]
     
                 # Add the marker to the map
-                st_leaflet.st_leaflet_map(
+                st_leaflet.st_map(
                 lat=start_lat,
                 lon=start_lon,
                 zoom=10,
@@ -124,7 +124,7 @@ with st.sidebar:
         with st.container(key="end_location_map_container"):
             
             # Capture user clicks to set the end point
-            end_map_state_change = st_leaflet.st_leaflet_map(
+            end_map_state_change = st_leaflet.st_map(
                 lat=st.session_state["end_center"][0],
                 lon=st.session_state["end_center"][1],
                 zoom=st.session_state["end_zoom"],
@@ -145,7 +145,7 @@ with st.sidebar:
                 ]
     
                 # Add the marker to the map
-                st_leaflet.st_leaflet_map(
+                st_leaflet.st_map(
                 lat=start_lat,
                 lon=start_lon,
                 zoom=10,
