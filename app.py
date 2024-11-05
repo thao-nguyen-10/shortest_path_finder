@@ -14,7 +14,6 @@ from networkx import NetworkXNoPath
 from src import (
     build_graph,
     add_marker,
-    create_map_with_marker,
     create_map,
     INITIAL_COORDINATES,
     INITIAL_ZOOM,
