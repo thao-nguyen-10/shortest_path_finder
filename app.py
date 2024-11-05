@@ -122,7 +122,6 @@ with st.sidebar:
                 st.write("Click on the map to get coordinates.")
 
         # Showing the information
-        with st.container(key="start_location_info_container"):
             dec = 10
             st.write(
                 round(st.session_state["start_last_clicked"][0], dec),
@@ -168,7 +167,6 @@ with st.sidebar:
                 st.write("Click on the map to get coordinates.")
 
         # Showing the information
-        with st.container(key="end_location_info_container"):
             dec = 10
             st.write(
                 round(st.session_state["end_last_clicked"][0], dec),
