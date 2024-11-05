@@ -1,6 +1,6 @@
 streamlit
 leaflet
-streamlit-leaflet
+streamlit_leaflet
 pandas
 numpy
 networkx
