@@ -86,7 +86,7 @@ with st.sidebar:
         st.caption(":blue[Click on the map to place the start marker.]")
 
         # Initial map centered at the start point
-        start_map = create_map_with_marker(st.session_state["start_center"])
+        start_map = create_map(st.session_state["start_center"])
 
         # Capture user clicks to set the start point
         start_map_state_change = st_folium(
@@ -111,7 +111,7 @@ with st.sidebar:
         st.caption(":blue[Click on the map to place the end marker.]")
 
         # Initial map centered at the end point
-        end_map = create_map_with_marker(st.session_state["end_center"])
+        end_map = create_map(st.session_state["end_center"])
 
         # Capture user clicks to set the end point
         end_map_state_change = st_folium(
