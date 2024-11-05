@@ -226,4 +226,5 @@ if submitted:
             st.write("Path has been calculated successfully!")
 
         except NetworkXNoPath as e:
-            st.write(":red[No path found between the selected
+            st.write(":red[Isolated points found, cannot go anywhere]")
+            st.image(os.path.join(SCRIPT_DIR, "./img/error.png"))
