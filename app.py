@@ -7,7 +7,7 @@ import pandas as pd
 from haversine import haversine, Unit
 
 from networkx import NetworkXNoPath
-from streamlit_leaflet import st_leaflet
+import streamlit_leaflet as st_leaflet
 
 from src import (
     build_graph,
