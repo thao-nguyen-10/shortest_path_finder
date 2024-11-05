@@ -7,7 +7,7 @@ import pandas as pd
 from haversine import haversine, Unit
 
 from networkx import NetworkXNoPath
-import st_leaflet
+import streamlit_leaflet as st_leaflet
 
 from src import (
     build_graph,
@@ -85,11 +85,12 @@ with st.sidebar:
             
             # Capture user clicks to set the start point
             start_map_state_change = st_leaflet.st_leaflet(
-                center={"lat": st.session_state["start_center"][0], "lon": st.session_state["start_center"][1]},
-                zoom=st.session_state["start_zoom"],
-                height=300,  # app_settings->map->sidebar->height
-                width="100%",  # app_settings->map->sidebar->weight
-                returned_objects=["click"]
+                lat=st.session_state["start_center"][0],  # Latitude
+                lon=st.session_state["start_center"][1],  # Longitude
+                zoom=st.session_state["start_zoom"],      # Zoom level
+                height=300,                              # Height of the map
+                width="100%",                            # Width of the map
+                returned_objects=["click"],              # Capture click events
             )
 
             # Capture the coordinates of the clicked point
@@ -105,8 +106,9 @@ with st.sidebar:
     
                 # Add the marker to the map
                 st_leaflet.st_leaflet(
-                center={"lat": start_lat, "lon": start_lon},
-                zoom=st.session_state["start_zoom"],
+                lat=st.session_state["start_center"][0],  # Latitude
+                lon=st.session_state["start_center"][1],  # Longitude
+                zoom=st.session_state["start_zoom"],      # Zoom level
                 markers=markers,  # Add the marker at the clicked location
                 )
                 st.write(f"Start Coordinates: {round(start_lat, 6)}, {round(start_lon, 6)}")
@@ -123,11 +125,12 @@ with st.sidebar:
             
             # Capture user clicks to set the end point
             end_map_state_change = st_leaflet.st_leaflet(
-                center={"lat": st.session_state["end_center"][0], "lon": st.session_state["end_center"][1]},
-                zoom=st.session_state["end_zoom"],
-                height=300,  # app_settings->map->sidebar->height
-                width="100%",  # app_settings->map->sidebar->weight
-                returned_objects=["click"]
+                lat=st.session_state["end_center"][0],  # Latitude
+                lon=st.session_state["end_center"][1],  # Longitude
+                zoom=st.session_state["end_zoom"],      # Zoom level
+                height=300,                              # Height of the map
+                width="100%",                            # Width of the map
+                returned_objects=["click"],              # Capture click events
             )
 
             # Capture the coordinates of the clicked point
@@ -143,8 +146,9 @@ with st.sidebar:
     
                 # Add the marker to the map
                 st_leaflet.st_leaflet(
-                center={"lat": end_lat, "lon": end_lon},
-                zoom=st.session_state["end_zoom"],
+                lat=st.session_state["end_center"][0],  # Latitude
+                lon=st.session_state["end_center"][1],  # Longitude
+                zoom=st.session_state["end_zoom"],      # Zoom level
                 markers=markers,  # Add the marker at the clicked location
                 )
                 st.write(f"End Coordinates: {round(end_lat, 6)}, {round(end_lon, 6)}")
