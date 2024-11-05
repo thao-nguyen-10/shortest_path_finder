@@ -11,8 +11,6 @@ import st_leaflet
 
 from src import (
     build_graph,
-    add_marker,
-    create_map,
     INITIAL_COORDINATES,
     INITIAL_ZOOM,
     INITIAL_ALGORITHM,
@@ -86,22 +84,37 @@ with st.sidebar:
         with st.container(key="start_location_map_container"):
             
             # Capture user clicks to set the start point
-            start_map_state_change = st_leaflet(
-                center=st.session_state["start_center"],
+            start_map_state_change = st_leaflet.st_leaflet_map(
+                lat=st.session_state["start_center"][0],
+                lon=st.session_state["start_center"][1],
                 zoom=st.session_state["start_zoom"],
-                height=300,
-                width="100%",
+                height=300,  # app_settings->map->sidebar->height
+                width="100%",  # app_settings->map->sidebar->weight
+                returned_objects=["click"]
             )
 
             # Capture the coordinates of the clicked point
-            if start_map_state_change and "lat" in start_map_state_change and "lon" in start_map_state_change:
+            if start_map_state_change and "click" in start_map_state_change:
                 start_lat = start_map_state_change["lat"]
-                start_lon = start_map_state_change["lon"]
+                start_lon = start_map_state_change["lng"]
                 st.session_state["start_center"] = [start_lat, start_lon]
 
-                # Add a marker on the map for the selected start location
-                add_marker(start_map_state_change, [start_lat, start_lon])
+                # Create a list of markers including the new marker
+                markers = [
+                {"lat": start_lat, "lon": start_lon, "popup": "Start Point"}
+                ]
+    
+                # Add the marker to the map
+                st_leaflet.st_leaflet_map(
+                lat=start_lat,
+                lon=start_lon,
+                zoom=10,
+                markers=markers,  # Add the marker at the clicked location
+                )
                 st.write(f"Start Coordinates: {round(start_lat, 6)}, {round(start_lon, 6)}")
+            # If no click, display a default message
+            else:
+                st.write("Click on the map to set the start point.")
 
         # End point map and selection
         st.subheader("Choose an ending location")
@@ -111,22 +124,37 @@ with st.sidebar:
         with st.container(key="end_location_map_container"):
             
             # Capture user clicks to set the end point
-            end_map_state_change = st_leaflet(
-                center=st.session_state["end_center"],
+            end_map_state_change = st_leaflet.st_leaflet_map(
+                lat=st.session_state["end_center"][0],
+                lon=st.session_state["end_center"][1],
                 zoom=st.session_state["end_zoom"],
-                height=300,
-                width="100%",
+                height=300,  # app_settings->map->sidebar->height
+                width="100%",  # app_settings->map->sidebar->weight
+                returned_objects=["click"]
             )
 
             # Capture the coordinates of the clicked point
-            if end_map_state_change and "lat" in end_map_state_change and "lon" in end_map_state_change:
+            if end_map_state_change and "click" in end_map_state_change:
                 end_lat = end_map_state_change["lat"]
-                end_lon = end_map_state_change["lon"]
+                end_lon = end_map_state_change["lng"]
                 st.session_state["end_center"] = [end_lat, end_lon]
 
-                # Add a marker on the map for the selected end location
-                add_marker(end_map_state_change, [end_lat, end_lon])
+                # Create a list of markers including the new marker
+                markers = [
+                {"lat": end_lat, "lon": end_lon, "popup": "End Point"}
+                ]
+    
+                # Add the marker to the map
+                st_leaflet.st_leaflet_map(
+                lat=start_lat,
+                lon=start_lon,
+                zoom=10,
+                markers=markers,  # Add the marker at the clicked location
+                )
                 st.write(f"End Coordinates: {round(end_lat, 6)}, {round(end_lon, 6)}")
+            # If no click, display a default message
+            else:
+                st.write("Click on the map to set the end point.")
 
         # Choose algorithm
         st.subheader("Choose an algorithm")
