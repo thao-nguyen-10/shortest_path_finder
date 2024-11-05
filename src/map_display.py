@@ -20,7 +20,7 @@ START_COORDINATES = map_conf["map_settings"]["start_coordinates"]
 END_COORDINATES = map_conf["map_settings"]["end_coordinates"]
 
 
-def create_map():
+ def create_map():
     folium_map = folium.Map(location=INITIAL_COORDINATES, zoom_start=INITIAL_ZOOM)
     return folium_map
 
