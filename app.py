@@ -85,8 +85,7 @@ with st.sidebar:
             
             # Capture user clicks to set the start point
             start_map_state_change = st_leaflet.st_leaflet(
-                lat=st.session_state["start_center"][0],
-                lon=st.session_state["start_center"][1],
+                center={"lat": st.session_state["start_center"][0], "lon": st.session_state["start_center"][1]},
                 zoom=st.session_state["start_zoom"],
                 height=300,  # app_settings->map->sidebar->height
                 width="100%",  # app_settings->map->sidebar->weight
@@ -106,9 +105,8 @@ with st.sidebar:
     
                 # Add the marker to the map
                 st_leaflet.st_leaflet(
-                lat=start_lat,
-                lon=start_lon,
-                zoom=10,
+                center={"lat": start_lat, "lon": start_lon},
+                zoom=st.session_state["start_zoom"],
                 markers=markers,  # Add the marker at the clicked location
                 )
                 st.write(f"Start Coordinates: {round(start_lat, 6)}, {round(start_lon, 6)}")
@@ -125,8 +123,7 @@ with st.sidebar:
             
             # Capture user clicks to set the end point
             end_map_state_change = st_leaflet.st_leaflet(
-                lat=st.session_state["end_center"][0],
-                lon=st.session_state["end_center"][1],
+                center={"lat": st.session_state["end_center"][0], "lon": st.session_state["end_center"][1]},
                 zoom=st.session_state["end_zoom"],
                 height=300,  # app_settings->map->sidebar->height
                 width="100%",  # app_settings->map->sidebar->weight
@@ -146,9 +143,8 @@ with st.sidebar:
     
                 # Add the marker to the map
                 st_leaflet.st_leaflet(
-                lat=start_lat,
-                lon=start_lon,
-                zoom=10,
+                center={"lat": end_lat, "lon": end_lon},
+                zoom=st.session_state["end_zoom"],
                 markers=markers,  # Add the marker at the clicked location
                 )
                 st.write(f"End Coordinates: {round(end_lat, 6)}, {round(end_lon, 6)}")
