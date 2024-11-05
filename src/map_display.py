@@ -1,7 +1,6 @@
+import folium
 import yaml
 import os
-import streamlit as st
-import streamlit_leaflet as st_leaflet
 
 # Constraints
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -10,6 +9,7 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 map_conf_path = os.path.join(SCRIPT_DIR, "../config/map_conf.yaml")
 with open(map_conf_path) as conf_file:
     map_conf = yaml.safe_load(conf_file)
+
 
 # Extract map settings
 INITIAL_COORDINATES = map_conf["map_settings"]["initial_coordinates"]
@@ -20,12 +20,20 @@ START_COORDINATES = map_conf["map_settings"]["start_coordinates"]
 END_COORDINATES = map_conf["map_settings"]["end_coordinates"]
 
 
-# def create_map():
-    # Create the initial Leaflet map centered at INITIAL_COORDINATES with the initial zoom level
-#    return st_leaflet(center=INITIAL_COORDINATES, zoom=INITIAL_ZOOM, height=500, width="100%")
+# Function to create a Folium map
+def create_map(last_click=None):
+    # Initialize the map centered at a specific location
+    m = folium.Map(location=INITIAL_COORDINATES, zoom_start=INITIAL_ZOOM)
 
+    # Add a click event to the map
+    folium.LatLngPopup().add_to(m)  # This will show the latitude and longitude of clicks
 
-#def add_marker(map_obj, location, popup_text="Marker"):
-#    # Add a marker to the map at the specified location
-#    Marker(location=location, popup=popup_text).add_to(map_obj)
-#    return map_obj
+    # If there are last click coordinates, add a marker at that location
+    if last_click:
+        folium.Marker(
+            location=[last_click["lat"], last_click["lng"]],
+            popup=f"Clicked Location: {last_click['lat']}, {last_click['lng']}",
+            icon=folium.Icon(color="blue")
+        ).add_to(m)
+
+    return m

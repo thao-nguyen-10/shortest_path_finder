@@ -1,6 +1,6 @@
 streamlit
-leaflet
-streamlit-leaflet==0.1.0
+folium
+streamlit-folium
 pandas
 numpy
 networkx

@@ -4,13 +4,16 @@ import warnings
 
 import streamlit as st
 import pandas as pd
+import folium
+
+from streamlit_folium import st_folium, folium_static
 from haversine import haversine, Unit
 
 from networkx import NetworkXNoPath
-import streamlit_leaflet as st_leaflet
 
 from src import (
     build_graph,
+    create_map,
     INITIAL_COORDINATES,
     INITIAL_ZOOM,
     INITIAL_ALGORITHM,
@@ -22,7 +25,9 @@ from src import (
 )
 from src.utils import getKNN
 
+
 warnings.filterwarnings("ignore", category=DeprecationWarning)
+
 
 # * Page config
 st.set_page_config(
@@ -67,97 +72,111 @@ if "algorithm" not in st.session_state:
 
 # * Helper functions
 
+# * Map
+#Create start map
+start_map = create_map()
+
+#Create end map
+end_map = create_map()
+
 # * Layout
 st.title("Welcome to the Shortest Path Finder app!")
 st.image(os.path.join(SCRIPT_DIR, "./img/map.jpg"))
 
-# Sidebar controls
+
+# * Sidebar Controls
 with st.sidebar:
     st.title("Controls")
 
     with st.form("input_map_form"):
-        # Start point map and selection
+
+        # Choose start location
         st.subheader("Choose a starting location")
-        st.caption(":blue[Click on the map to place the start marker.]")
+        st.caption(":blue[Click on the map to choose starting point:]")
 
         # Create the map to select starting location
         with st.container(key="start_location_map_container"):
-            
-            # Capture user clicks to set the start point
-            start_map_state_change = st_leaflet.st_leaflet(
-                lat=st.session_state["start_center"][0],  # Latitude
-                lon=st.session_state["start_center"][1],  # Longitude
-                zoom=st.session_state["start_zoom"],      # Zoom level
-                height=300,                              # Height of the map
-                width="100%",                            # Width of the map
-                returned_objects=["click"],              # Capture click events
+
+            # User click on the map
+            start_map_state_change = st_folium(start_map, 
+                                               width=310, 
+                                               height=290, 
+                                               returned_objects=["last_clicked"])
+
+            # Check if a click event occurred
+            if start_map_state_change and "last_clicked" in start_map_state_change:
+                start_last_clicked = start_map_state_change["last_clicked"]
+                if start_last_clicked:
+
+                    # Create a new map with the marker at the last clicked location
+                    start_map = create_map(start_last_clicked)
+
+                    # Display the updated map with the new marker
+                    st_folium(start_map, 
+                              width=310, 
+                              height=290, 
+                              returned_objects=["last_clicked"])
+
+                    #st.write(f"Coordinates: Latitude: {start_last_clicked['lat']}, Longitude: {start_last_clicked['lng']}")
+                
+            else:
+                st.write("Click on the map to get coordinates.")
+
+        # Showing the information
+        with st.container(key="start_location_info_container"):
+            dec = 10
+            st.write(
+                round(st.session_state["start_last_clicked"][0], dec),
+                ", ",
+                round(st.session_state["start_last_clicked"][1], dec),
             )
 
-            # Capture the coordinates of the clicked point
-            if start_map_state_change and "click" in start_map_state_change:
-                start_lat = start_map_state_change["lat"]
-                start_lon = start_map_state_change["lng"]
-                st.session_state["start_center"] = [start_lat, start_lon]
-
-                # Create a list of markers including the new marker
-                markers = [
-                {"lat": start_lat, "lon": start_lon, "popup": "Start Point"}
-                ]
-    
-                # Add the marker to the map
-                st_leaflet.st_leaflet(
-                lat=st.session_state["start_center"][0],  # Latitude
-                lon=st.session_state["start_center"][1],  # Longitude
-                zoom=st.session_state["start_zoom"],      # Zoom level
-                markers=markers,  # Add the marker at the clicked location
-                )
-                st.write(f"Start Coordinates: {round(start_lat, 6)}, {round(start_lon, 6)}")
-            # If no click, display a default message
-            else:
-                st.write("Click on the map to set the start point.")
-
-        # End point map and selection
+        # Choose end location
         st.subheader("Choose an ending location")
-        st.caption(":blue[Click on the map to place the end marker.]")
+        st.caption(":blue[Click on the map to choose starting point:]")
 
         # Create the map to select ending location
         with st.container(key="end_location_map_container"):
-            
-            # Capture user clicks to set the end point
-            end_map_state_change = st_leaflet.st_leaflet(
-                lat=st.session_state["end_center"][0],  # Latitude
-                lon=st.session_state["end_center"][1],  # Longitude
-                zoom=st.session_state["end_zoom"],      # Zoom level
-                height=300,                              # Height of the map
-                width="100%",                            # Width of the map
-                returned_objects=["click"],              # Capture click events
-            )
 
-            # Capture the coordinates of the clicked point
-            if end_map_state_change and "click" in end_map_state_change:
-                end_lat = end_map_state_change["lat"]
-                end_lon = end_map_state_change["lng"]
-                st.session_state["end_center"] = [end_lat, end_lon]
+           # User click on the map
+            end_map_state_change = st_folium(end_map, 
+                                               width=310, 
+                                               height=290, 
+                                               returned_objects=["last_clicked"])
 
-                # Create a list of markers including the new marker
-                markers = [
-                {"lat": end_lat, "lon": end_lon, "popup": "End Point"}
-                ]
-    
-                # Add the marker to the map
-                st_leaflet.st_leaflet(
-                lat=st.session_state["end_center"][0],  # Latitude
-                lon=st.session_state["end_center"][1],  # Longitude
-                zoom=st.session_state["end_zoom"],      # Zoom level
-                markers=markers,  # Add the marker at the clicked location
-                )
-                st.write(f"End Coordinates: {round(end_lat, 6)}, {round(end_lon, 6)}")
-            # If no click, display a default message
+            # Check if a click event occurred
+            if end_map_state_change and "last_clicked" in end_map_state_change:
+                end_last_clicked = end_map_state_change["last_clicked"]
+                if end_last_clicked:
+
+                    # Create a new map with the marker at the last clicked location
+                    end_map = create_map(end_last_clicked)
+
+                    # Display the updated map with the new marker
+                    st_folium(end_map, 
+                              width=310, 
+                              height=290, 
+                              returned_objects=["last_clicked"])
+
+                    #st.write(f"Coordinates: Latitude: {end_last_clicked['lat']}, Longitude: {end_last_clicked['lng']}")
+                
             else:
-                st.write("Click on the map to set the end point.")
+                st.write("Click on the map to get coordinates.")
+
+        # Showing the information
+        with st.container(key="end_location_info_container"):
+            dec = 10
+            st.write(
+                round(st.session_state["end_last_clicked"][0], dec),
+                ", ",
+                round(st.session_state["end_last_clicked"][1], dec),
+            )
 
         # Choose algorithm
         st.subheader("Choose an algorithm")
+        st.caption(":blue[Selection of algorithm for shortest path calculation]")
+
+        # Create the box to select the algorithm
         with st.container(key="algo_selection_container"):
             algorithm = st.selectbox(
                 "Choose the algorithm:",
@@ -170,20 +189,16 @@ with st.sidebar:
             submitted = st.form_submit_button(label="Submit Settings")
 
             if submitted:
-                st.session_state["source"] = st.session_state["start_center"]
-                st.session_state["target"] = st.session_state["end_center"]
+                st.session_state["source"] = st.session_state["start_last_clicked"]
+                st.session_state["target"] = st.session_state["end_last_clicked"]
                 st.session_state["algorithm"] = algorithm
 
-        # Reset button
-        if st.button("Reset Map"):
-            st.session_state["start_center"] = INITIAL_COORDINATES
-            st.session_state["end_center"] = INITIAL_COORDINATES
-            st.experimental_rerun()
 
-# Load graph data
 @st.cache_data
 def load_graph_data():
-    nodes = pd.read_csv(os.path.join(SCRIPT_DIR, "./data/primary_node_list.csv"), index_col=0)
+    nodes = pd.read_csv(
+        os.path.join(SCRIPT_DIR, "./data/primary_node_list.csv"), index_col=0
+    )
     edges = pd.read_csv(os.path.join(SCRIPT_DIR, "./data/primary_edge_list.csv"))
     graph = build_graph(nodes, edges)
 
@@ -191,12 +206,13 @@ def load_graph_data():
 
     return graph, edges, nodes, node_dict
 
+
 with st.spinner("Loading data..."):
     dir_graph, edges, nodes, node_dict = load_graph_data()
 
-st.success(f"Completely loaded data with {len(nodes)} nodes and {len(edges)} edges.")
+st.success(f"Completely load data of {len(nodes)} nodes and {len(edges)} edges~~")
 
-# Function to run the selected algorithm
+
 def run_algorithm(algorithm_name, points):
     start, end = points[0], points[1]
 
@@ -205,6 +221,7 @@ def run_algorithm(algorithm_name, points):
 
     distance_start = haversine(start, nearest_start_loc, unit=Unit.METERS)
     distance_end = haversine(end, nearest_end_loc, unit=Unit.METERS)
+    print(f"Nearest start, end (meters): {distance_start:4f} {distance_end:4f}")
 
     if algorithm_name == "Dijkstra":
         path_length, vertices = dijkstra(dir_graph, nearest_start, nearest_end)
@@ -216,7 +233,7 @@ def run_algorithm(algorithm_name, points):
     coordinates = (
         [start]
         + [
-            (float(node_dict[int(node)]["y"]), float(node_dict[int(node)]["x"]))
+            (float(node_dict[int(node)]["y"]), float(node_dict[(int(node))]["x"]))
             for node in vertices
         ]
         + [end]
@@ -224,35 +241,31 @@ def run_algorithm(algorithm_name, points):
 
     return path_length + distance_start + distance_end, coordinates
 
-# * Displaying the result after submitting
-if submitted:
-    st.write(f"Source: {st.session_state['source']}")
-    st.write(f"Target: {st.session_state['target']}")
-    st.write(f"Algorithm: {st.session_state['algorithm']}")
 
-    with st.spinner("Calculating shortest path..."):
-        try:
-            distance, coordinates = run_algorithm(
-                st.session_state["algorithm"],
-                [st.session_state["source"], st.session_state["target"]]
-            )
+# * Map calculation
+st.write("Source:", st.session_state["source"])
 
-            # Convert distance to kilometers and meters
-            km_distance = int(distance) // 1000
-            remain_m_distance = distance - km_distance * 1000
-            st.write(f"Shortest path: :blue[{km_distance} km {remain_m_distance:.4f} m]")
+st.write("Target:", st.session_state["target"])
 
-            # Show the result on the Leaflet map
-            result_map = st_leaflet(
-                center=st.session_state["start_center"],
-                zoom=12,
-                height=600,
-                width="100%",
-            )
-            # Draw path using polyline or other relevant annotations
-            # Note: You can manually add markers and other objects as necessary
-            st.write("Path has been calculated successfully!")
+st.write("Algorithm:", st.session_state["algorithm"])
 
-        except NetworkXNoPath as e:
-            st.write(":red[Isolated points found, cannot go anywhere]")
-            st.image(os.path.join(SCRIPT_DIR, "./img/error.png"))
+with st.spinner("Building map..."):
+    try:
+        distance, coordinates = run_algorithm(
+            st.session_state["algorithm"],
+            [st.session_state["source"], st.session_state["target"]],
+        )
+        km_distance = int(distance) // 1000
+        remain_m_distance = distance - km_distance * 1000
+        st.write(f"Shortest path: :blue[{km_distance}km {remain_m_distance:.4f}m]")
+        solution_map = create_map()
+        folium.PolyLine(
+            coordinates,
+            color="blue",
+            weight=5,
+            tooltip=f"Path Length: {distance:.4f} meters",
+        ).add_to(solution_map)
+        folium_static(solution_map, width=800, height=600)
+    except NetworkXNoPath as er:
+        st.write(":red[Isolated points found, cannot go anywhere]")
+        st.image(os.path.join(SCRIPT_DIR, "./img/error.png"))
