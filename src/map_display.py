@@ -1,7 +1,8 @@
 import yaml
 import os
 import streamlit as st
-from streamlit_leaflet import st_leaflet, Marker
+import st_leaflet
+from st_leaflet import Marker
 
 # Constraints
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
