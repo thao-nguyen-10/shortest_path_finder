@@ -29,11 +29,11 @@ def create_map(last_click=None):
     folium.LatLngPopup().add_to(m)  # This will show the latitude and longitude of clicks
 
     # If there are last click coordinates, add a marker at that location
-    # if last_click:
-    #    folium.Marker(
-    #        location=[last_click["lat"], last_click["lng"]],
-    #        popup=f"Clicked Location: {last_click['lat']}, {last_click['lng']}",
-    #        icon=folium.Icon(color="blue")
-    #    ).add_to(m)
+    if last_click:
+        folium.Marker(
+            location=[last_click["lat"], last_click["lng"]],
+            popup=f"Clicked Location: {last_click['lat']}, {last_click['lng']}",
+            icon=folium.Icon(color="blue")
+        ).add_to(m)
 
     return m
