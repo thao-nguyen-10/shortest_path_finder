@@ -95,7 +95,8 @@ with st.sidebar:
             start_map_state_change = st_folium(start_map, 
                                                width=310, 
                                                height=290, 
-                                               returned_objects=["last_clicked"])
+                                               returned_objects=["last_clicked"],
+                                               key="start_map")
 
             # Check if a click event occurred
             if start_map_state_change and "last_clicked" in start_map_state_change:
@@ -109,7 +110,8 @@ with st.sidebar:
                     st_folium(start_map, 
                               width=310, 
                               height=290, 
-                              returned_objects=["last_clicked"])
+                              returned_objects=["last_clicked"],
+                              key="updated_start_map")
                     
                     st.session_state["start_last_clicked"] = [
                     start_map_state_change["last_clicked"]["lat"],
@@ -140,7 +142,8 @@ with st.sidebar:
             end_map_state_change = st_folium(end_map, 
                                                width=310, 
                                                height=290, 
-                                               returned_objects=["last_clicked"])
+                                               returned_objects=["last_clicked"],
+                                               key="end_map")
 
             # Check if a click event occurred
             if end_map_state_change and "last_clicked" in end_map_state_change:
@@ -154,7 +157,8 @@ with st.sidebar:
                     st_folium(end_map, 
                               width=310, 
                               height=290, 
-                              returned_objects=["last_clicked"])
+                              returned_objects=["last_clicked"],
+                              key="updated_end_map")
                     
                     st.session_state["end_last_clicked"] = [
                     end_map_state_change["last_clicked"]["lat"],
