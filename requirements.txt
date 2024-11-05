@@ -1,9 +1,10 @@
 streamlit
 leaflet
-streamlit-leaflet
+git+https://github.com/andfanilo/streamlit-leaflet.git
 pandas
 numpy
 networkx
 pyyaml
 haversine
 scikit-learn
+python-3.8
