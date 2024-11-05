@@ -107,10 +107,10 @@ with st.sidebar:
                     start_map = create_map(start_last_clicked)
 
                     # Display the updated map with the new marker
-                    st_folium(start_map, 
-                              width=310, 
-                              height=290, 
-                              key="updated_start_map")
+                    # st_folium(start_map, 
+                    #          width=310, 
+                    #          height=290, 
+                    #          key="updated_start_map")
                     
                     st.session_state["start_last_clicked"] = [
                     start_map_state_change["last_clicked"]["lat"],
@@ -153,10 +153,10 @@ with st.sidebar:
                     end_map = create_map(end_last_clicked)
 
                     # Display the updated map with the new marker
-                    st_folium(end_map, 
-                              width=310, 
-                              height=290, 
-                              key="updated_end_map")
+                    # st_folium(end_map, 
+                    #          width=310, 
+                    #          height=290, 
+                    #          key="updated_end_map")
                     
                     st.session_state["end_last_clicked"] = [
                     end_map_state_change["last_clicked"]["lat"],
