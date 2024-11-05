@@ -71,6 +71,10 @@ if "algorithm" not in st.session_state:
 
 # * Helper functions
 
+# * Map
+start_map = create_map()
+end_map = create_map()
+
 # * Layout
 st.title("Welcome to the Shortest Path Finder app!")
 st.image(os.path.join(SCRIPT_DIR, "./img/map.jpg"))
@@ -84,67 +88,69 @@ with st.sidebar:
         st.subheader("Choose a starting location")
         st.caption(":blue[Click on the map to place the start marker.]")
 
-        # Initial map centered at the start point
-        start_map = create_map()
-
-        # Capture user clicks to set the start point
-        start_map_state_change = st_folium(
+        # Create the map to select starting location
+        with st.container(key="start_location_map_container"):
+            
+            # Capture user clicks to set the start point
+            start_map_state_change = st_folium(
             start_map,
             key="start_map",
             height=300,
             width="100%",
             returned_objects=["last_clicked"]
-        )
-
-        if start_map_state_change and "last_clicked" in start_map_state_change:
-            start_lat = start_map_state_change["last_clicked"]["lat"]
-            start_lon = start_map_state_change["last_clicked"]["lon"]
-            st.session_state["start_center"] = [start_lat, start_lon]
-
-            # Add a marker on the map for the selected start location
-            add_marker(start_map, [start_lat, start_lon])
-            st.write(f"Start Coordinates: {round(start_lat, 6)}, {round(start_lon, 6)}")
+            )
+            
+            if start_map_state_change and "last_clicked" in start_map_state_change:
+                start_lat = start_map_state_change["last_clicked"]["lat"]
+                start_lon = start_map_state_change["last_clicked"]["lon"]
+                st.session_state["start_center"] = [start_lat, start_lon]
+                
+                # Add a marker on the map for the selected start location
+                add_marker(start_map, [start_lat, start_lon])
+                st.write(f"Start Coordinates: {round(start_lat, 6)}, {round(start_lon, 6)}")
 
         # End point map and selection
         st.subheader("Choose an ending location")
         st.caption(":blue[Click on the map to place the end marker.]")
 
-        # Initial map centered at the end point
-        end_map = create_map()
-
-        # Capture user clicks to set the end point
-        end_map_state_change = st_folium(
+        # Create the map to select ending location
+        with st.container(key="end_location_map_container"):
+            
+            # Capture user clicks to set the end point
+            end_map_state_change = st_folium(
             end_map,
             key="end_map",
             height=300,
             width="100%",
             returned_objects=["last_clicked"]
-        )
-
-        if end_map_state_change and "last_clicked" in end_map_state_change:
-            end_lat = end_map_state_change["last_clicked"]["lat"]
-            end_lon = end_map_state_change["last_clicked"]["lon"]
-            st.session_state["end_center"] = [end_lat, end_lon]
-
-            # Add a marker on the map for the selected end location
-            add_marker(end_map, [end_lat, end_lon])
-            st.write(f"End Coordinates: {round(end_lat, 6)}, {round(end_lon, 6)}")
+            )
+            
+            if end_map_state_change and "last_clicked" in end_map_state_change:
+                end_lat = end_map_state_change["last_clicked"]["lat"]
+                end_lon = end_map_state_change["last_clicked"]["lon"]
+                st.session_state["end_center"] = [end_lat, end_lon]
+                
+                # Add a marker on the map for the selected end location
+                add_marker(end_map, [end_lat, end_lon])
+                st.write(f"End Coordinates: {round(end_lat, 6)}, {round(end_lon, 6)}")
 
         # Choose algorithm
         st.subheader("Choose an algorithm")
-        algorithm = st.selectbox(
-            "Choose the algorithm:",
-            options=["Dijkstra", "Bellman-Ford", "Floyd-Warshall"],
-            key="algo_selection_box",
-        )
+        with st.container(key="algo_selection_container"):
+            algorithm = st.selectbox(
+                "Choose the algorithm:",
+                options=["Dijkstra", "Bellman-Ford", "Floyd-Warshall"],
+                key="algo_selection_box",
+            )
 
-        # Submit button
-        submitted = st.form_submit_button(label="Submit Settings")
+        # Submit the selection of settings
+        with st.container(key="submit_btn_container"):
+            submitted = st.form_submit_button(label="Submit Settings")
 
-        if submitted:
-            st.session_state["source"] = st.session_state["start_center"]
-            st.session_state["target"] = st.session_state["end_center"]
-            st.session_state["algorithm"] = algorithm
+            if submitted:
+                st.session_state["source"] = st.session_state["start_center"]
+                st.session_state["target"] = st.session_state["end_center"]
+                st.session_state["algorithm"] = algorithm
 
         # Reset button
         if st.button("Reset Map"):
